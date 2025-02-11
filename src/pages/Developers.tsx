@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Search, Star, Clock, ChevronRight, Filter, User } from 'lucide-react';
-import { DeveloperProfile } from '../components/DeveloperProfile';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Search, Star, Clock, ChevronRight, Filter, User } from "lucide-react";
+import { DeveloperProfile } from "../components/DeveloperProfile";
+import { Link } from "react-router-dom";
 
 interface Developer {
   _id: string;
@@ -12,12 +12,12 @@ interface Developer {
   rating?: number;
   skills: string[];
   imageUrl: string;
-  status: 'available' | 'unavailable' | 'busy';
+  status: "available" | "unavailable" | "busy";
   bio: string;
 }
 
 export const Developers = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [selectedDeveloper, setSelectedDeveloper] = useState<Developer | null>(
     null
@@ -28,19 +28,22 @@ export const Developers = () => {
   useEffect(() => {
     const fetchDevelopers = async () => {
       try {
-        const response = await fetch('https://synergy-hub.onrender.com/api/users/developers',{
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}` 
+        const response = await fetch(
+          "https://dev-junction.onrender.com/api/users/developers",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
-        });
+        );
         const data = await response.json();
         if (data.success) {
           setDevelopers(data.data);
         }
       } catch (error) {
-        console.error('Failed to fetch developers:', error);
+        console.error("Failed to fetch developers:", error);
       } finally {
         setIsLoading(false);
       }
@@ -51,14 +54,14 @@ export const Developers = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'available':
-        return 'bg-green-500/20 text-green-600 dark:text-green-400';
-      case 'busy':
-        return 'bg-yellow-500/20 text-yellow-600 dark:text-yellow-400';
-      case 'unavailable':
-        return 'bg-red-500/20 text-red-600 dark:text-red-400';
+      case "available":
+        return "bg-green-500/20 text-green-600 dark:text-green-400";
+      case "busy":
+        return "bg-yellow-500/20 text-yellow-600 dark:text-yellow-400";
+      case "unavailable":
+        return "bg-red-500/20 text-red-600 dark:text-red-400";
       default:
-        return 'bg-gray-500/20 text-gray-600 dark:text-gray-400';
+        return "bg-gray-500/20 text-gray-600 dark:text-gray-400";
     }
   };
 

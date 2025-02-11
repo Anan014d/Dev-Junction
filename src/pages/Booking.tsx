@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Calendar,
   Clock,
@@ -11,12 +11,12 @@ import {
   AlertCircle,
   Loader2,
   Zap,
-} from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { MeetingRoom } from '../components/MeetingRoom';
-import { useAuth } from '../contexts/AuthContext';
-import { PaymentModal } from '../components/PaymentModal';
-import { ethService } from '../services/ethService';
+} from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
+import { MeetingRoom } from "../components/MeetingRoom";
+import { useAuth } from "../contexts/AuthContext";
+import { PaymentModal } from "../components/PaymentModal";
+import { ethService } from "../services/ethService";
 
 interface Developer {
   _id: string;
@@ -42,7 +42,7 @@ export const Booking = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [ethAmount, setEthAmount] = useState<string>('0');
+  const [ethAmount, setEthAmount] = useState<string>("0");
   const [isLoadingEth, setIsLoadingEth] = useState(false);
   const [isProcessingBooking, setIsProcessingBooking] = useState(false);
   const [bookingData, setBookingData] = useState<any>(null);
@@ -56,22 +56,23 @@ export const Booking = () => {
     const fetchDeveloper = async () => {
       try {
         const response = await fetch(
-          `https://synergy-hub.onrender.com/api/users/developers/${developerId}`,{
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
+          `https://dev-junction.onrender.com/api/users/developers/${developerId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
         );
         if (!response.ok) {
-          throw new Error('Failed to fetch developer details');
+          throw new Error("Failed to fetch developer details");
         }
         const data = await response.json();
         setDeveloper(data.data);
       } catch (err) {
-        setError('Failed to load developer details');
-        console.error('Error:', err);
+        setError("Failed to load developer details");
+        console.error("Error:", err);
       } finally {
         setIsLoading(false);
       }
@@ -90,7 +91,7 @@ export const Booking = () => {
           const eth = await ethService.convertUSDToETH(totalCost);
           setEthAmount(eth);
         } catch (error) {
-          console.error('Failed to convert USD to ETH:', error);
+          console.error("Failed to convert USD to ETH:", error);
         } finally {
           setIsLoadingEth(false);
         }
@@ -107,22 +108,22 @@ export const Booking = () => {
     setSelectedDate(bookingTime);
     setSelectedTime(
       bookingTime.toLocaleTimeString([], {
-        hour: 'numeric',
-        minute: '2-digit',
+        hour: "numeric",
+        minute: "2-digit",
         hour12: true,
       })
     );
   };
 
-  const getDayName = (date: Date): keyof Developer['availability'] => {
-    const days: Record<number, keyof Developer['availability']> = {
-      1: 'monday',
-      2: 'tuesday',
-      3: 'wednesday',
-      4: 'thursday',
-      5: 'friday',
+  const getDayName = (date: Date): keyof Developer["availability"] => {
+    const days: Record<number, keyof Developer["availability"]> = {
+      1: "monday",
+      2: "tuesday",
+      3: "wednesday",
+      4: "thursday",
+      5: "friday",
     };
-    return days[date.getDay()] || 'monday';
+    return days[date.getDay()] || "monday";
   };
 
   const getAvailableTimesForDate = (date: Date): string[] => {
@@ -132,37 +133,40 @@ export const Booking = () => {
 
   const handlePaymentSuccess = async (txHash: string) => {
     if (isProcessingBooking) return;
-    
+
     try {
       setIsProcessingBooking(true);
       setShowPayment(false);
 
-      const response = await fetch('https://synergy-hub.onrender.com/api/bookings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({
-          developerId: developer?._id,
-          customerId: user?._id,
-          date: selectedDate,
-          time: selectedTime,
-          duration,
-          totalAmount: totalCost,
-          txHash,
-        }),
-      });
+      const response = await fetch(
+        "https://dev-junction.onrender.com/api/bookings",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            developerId: developer?._id,
+            customerId: user?._id,
+            date: selectedDate,
+            time: selectedTime,
+            duration,
+            totalAmount: totalCost,
+            txHash,
+          }),
+        }
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to create booking');
+        throw new Error("Failed to create booking");
       }
 
       const data = await response.json();
       setBookingData(data.data);
       setStep(2);
     } catch (error) {
-      console.error('Failed to create booking:', error);
+      console.error("Failed to create booking:", error);
     } finally {
       setIsProcessingBooking(false);
     }
@@ -195,7 +199,7 @@ export const Booking = () => {
       <div className="min-h-screen pt-16 bg-gray-50 dark:bg-dark-200 flex items-center justify-center">
         <div className="flex items-center gap-3 text-red-500">
           <AlertCircle className="w-6 h-6" />
-          <span>{error || 'Developer not found'}</span>
+          <span>{error || "Developer not found"}</span>
         </div>
       </div>
     );
@@ -243,8 +247,8 @@ export const Booking = () => {
                       onClick={handleInstantBooking}
                       className={`px-6 py-3 rounded-xl flex items-center gap-2 transition-colors ${
                         isInstantBooking
-                          ? 'bg-primary-600 text-white'
-                          : 'bg-primary-600/10 text-primary-600 dark:text-primary-400'
+                          ? "bg-primary-600 text-white"
+                          : "bg-primary-600/10 text-primary-600 dark:text-primary-400"
                       }`}
                     >
                       <Zap className="w-5 h-5" />
@@ -279,15 +283,15 @@ export const Booking = () => {
                                 className={`p-3 rounded-xl text-center transition-colors ${
                                   selectedDate.toDateString() ===
                                   date.toDateString()
-                                    ? 'bg-primary-600 text-white'
+                                    ? "bg-primary-600 text-white"
                                     : hasAvailability
-                                    ? 'bg-gray-50 dark:bg-dark-200 text-gray-900 dark:text-white hover:bg-primary-600/10'
-                                    : 'bg-gray-100 dark:bg-dark-300 text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                                    ? "bg-gray-50 dark:bg-dark-200 text-gray-900 dark:text-white hover:bg-primary-600/10"
+                                    : "bg-gray-100 dark:bg-dark-300 text-gray-400 dark:text-gray-600 cursor-not-allowed"
                                 }`}
                               >
                                 <div className="text-sm font-medium">
-                                  {date.toLocaleDateString('en-US', {
-                                    weekday: 'short',
+                                  {date.toLocaleDateString("en-US", {
+                                    weekday: "short",
                                   })}
                                 </div>
                                 <div className="text-lg font-semibold">
@@ -311,8 +315,8 @@ export const Booking = () => {
                               onClick={() => setSelectedTime(time)}
                               className={`p-3 rounded-xl text-center transition-colors ${
                                 selectedTime === time
-                                  ? 'bg-primary-600 text-white'
-                                  : 'bg-gray-50 dark:bg-dark-200 text-gray-900 dark:text-white hover:bg-primary-600/10'
+                                  ? "bg-primary-600 text-white"
+                                  : "bg-gray-50 dark:bg-dark-200 text-gray-900 dark:text-white hover:bg-primary-600/10"
                               }`}
                             >
                               {time}
@@ -336,7 +340,7 @@ export const Booking = () => {
                         -
                       </button>
                       <span className="text-xl font-semibold text-gray-900 dark:text-white">
-                        {duration} hour{duration > 1 ? 's' : ''}
+                        {duration} hour{duration > 1 ? "s" : ""}
                       </span>
                       <button
                         onClick={() => setDuration(Math.min(4, duration + 1))}
@@ -451,12 +455,12 @@ export const Booking = () => {
                         Date & Time
                       </p>
                       <p className="text-gray-900 dark:text-white font-medium">
-                        {selectedDate.toLocaleDateString('en-US', {
-                          weekday: 'long',
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                        })}{' '}
+                        {selectedDate.toLocaleDateString("en-US", {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}{" "}
                         at {selectedTime}
                       </p>
                     </div>
@@ -468,7 +472,7 @@ export const Booking = () => {
                         Duration
                       </p>
                       <p className="text-gray-900 dark:text-white font-medium">
-                        {duration} hour{duration > 1 ? 's' : ''}
+                        {duration} hour{duration > 1 ? "s" : ""}
                       </p>
                     </div>
                   </div>
@@ -496,7 +500,7 @@ export const Booking = () => {
                 </div>
 
                 <button
-                  onClick={() => navigate('/customer/dashboard')}
+                  onClick={() => navigate("/customer/dashboard")}
                   className="w-full bg-primary-600 text-white py-4 rounded-xl hover:bg-primary-700 transition-colors flex items-center justify-center gap-2"
                 >
                   <span>Go to Dashboard</span>

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Video,
   Clock,
@@ -17,23 +17,23 @@ import {
   Timer,
   Shield,
   Sparkles,
-} from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import { MeetingModal } from '../components/MeetingModal';
-import { ethers } from 'ethers';
-import { useWeb3 } from '../contexts/Web3Context';
+} from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import { MeetingModal } from "../components/MeetingModal";
+import { ethers } from "ethers";
+import { useWeb3 } from "../contexts/Web3Context";
 
 export const DeveloperDashboard = () => {
   const [activeNotifications, setActiveNotifications] = useState(3);
-  const [selectedTimeframe, setSelectedTimeframe] = useState('week');
+  const [selectedTimeframe, setSelectedTimeframe] = useState("week");
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const [selectedMeeting, setSelectedMeeting] = useState<any>(null);
 
   const { getProfile } = useAuth();
   const [walletBalance, setWalletBalance] = useState({
-    eth: '0',
-    usd: '0',
-    pending: '0',
+    eth: "0",
+    usd: "0",
+    pending: "0",
   });
   const { account } = useWeb3();
   useEffect(() => {
@@ -42,12 +42,13 @@ export const DeveloperDashboard = () => {
         const data = await getProfile();
 
         const response = await fetch(
-          `https://synergy-hub.onrender.com/api/meetings/${data._id}/upcoming`,{
-            method: 'GET',
+          `https://dev-junction.onrender.com/api/meetings/${data._id}/upcoming`,
+          {
+            method: "GET",
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('token')}` 
-            }
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
         );
 
@@ -56,7 +57,7 @@ export const DeveloperDashboard = () => {
           setUpcomingSessions(data.data);
         }
       } catch (error) {
-        console.error('Failed to fetch upcoming sessions:', error);
+        console.error("Failed to fetch upcoming sessions:", error);
       }
     };
 
@@ -73,7 +74,7 @@ export const DeveloperDashboard = () => {
 
           // Fetch ETH price in USD
           const response = await fetch(
-            'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
+            "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
           );
           const data = await response.json();
           const ethPrice = data.ethereum.usd;
@@ -83,10 +84,10 @@ export const DeveloperDashboard = () => {
           setWalletBalance({
             eth: ethBalance,
             usd: usdBalance,
-            pending: '0', // You can implement pending transactions logic if needed
+            pending: "0", // You can implement pending transactions logic if needed
           });
         } catch (error) {
-          console.error('Error fetching wallet balance:', error);
+          console.error("Error fetching wallet balance:", error);
         }
       }
     };
@@ -101,21 +102,21 @@ export const DeveloperDashboard = () => {
   const recentReviews = [
     {
       id: 1,
-      customer: 'Michael Scott',
+      customer: "Michael Scott",
       rating: 5,
-      comment: 'Excellent session! Very helpful and knowledgeable.',
-      date: '2024-03-10',
-      skills: ['React', 'Performance'],
+      comment: "Excellent session! Very helpful and knowledgeable.",
+      date: "2024-03-10",
+      skills: ["React", "Performance"],
       reply:
-        'Thank you for the kind words! Looking forward to our next session.',
+        "Thank you for the kind words! Looking forward to our next session.",
     },
     {
       id: 2,
-      customer: 'Lisa Chen',
+      customer: "Lisa Chen",
       rating: 4,
-      comment: 'Great communication and problem-solving skills.',
-      date: '2024-03-08',
-      skills: ['Node.js', 'API Design'],
+      comment: "Great communication and problem-solving skills.",
+      date: "2024-03-08",
+      skills: ["Node.js", "API Design"],
       reply: null,
     },
   ];
@@ -124,42 +125,40 @@ export const DeveloperDashboard = () => {
     total: 2880,
     pending: 450,
     monthly: 1200,
-    trend: '+15%',
+    trend: "+15%",
     transactions: [
       {
         id: 1,
         amount: 240,
-        status: 'completed',
-        date: '2024-03-10',
-        customer: 'John Doe',
+        status: "completed",
+        date: "2024-03-10",
+        customer: "John Doe",
       },
       {
         id: 2,
         amount: 120,
-        status: 'pending',
-        date: '2024-03-09',
-        customer: 'Alice Smith',
+        status: "pending",
+        date: "2024-03-09",
+        customer: "Alice Smith",
       },
     ],
   };
 
   const skillStats = [
-    { name: 'React', sessions: 15, rating: 4.9 },
-    { name: 'Node.js', sessions: 12, rating: 4.8 },
-    { name: 'TypeScript', sessions: 8, rating: 4.7 },
+    { name: "React", sessions: 15, rating: 4.9 },
+    { name: "Node.js", sessions: 12, rating: 4.8 },
+    { name: "TypeScript", sessions: 8, rating: 4.7 },
   ];
 
   return (
     <div className="min-h-screen pt-16 bg-gray-50 dark:bg-dark-200">
       <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Top Stats Grid */}
-        
-    
+
         <div className="grid lg:grid-cols-1 gap-8">
           {/* Main Content Area */}
           <div className="lg:col-span-2 space-y-8">
             {/* Earnings Chart */}
-           
 
             {/* Upcoming Sessions */}
             <motion.div
@@ -198,9 +197,9 @@ export const DeveloperDashboard = () => {
                         </div>
                         <span
                           className={`px-3 py-1 rounded-full text-sm font-medium ${
-                            session.status === 'scheduled'
-                              ? 'bg-green-500/10 text-green-600 dark:text-green-400'
-                              : 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400'
+                            session.status === "scheduled"
+                              ? "bg-green-500/10 text-green-600 dark:text-green-400"
+                              : "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
                           }`}
                         >
                           {session.status.charAt(0).toUpperCase() +
@@ -220,8 +219,8 @@ export const DeveloperDashboard = () => {
                             {new Date(session.startTime).toLocaleTimeString(
                               [],
                               {
-                                hour: '2-digit',
-                                minute: '2-digit',
+                                hour: "2-digit",
+                                minute: "2-digit",
                               }
                             )}
                           </span>
@@ -236,7 +235,6 @@ export const DeveloperDashboard = () => {
                           ${session.bookingId.totalAmount}
                         </span>
                         <div className="flex gap-2">
-                          
                           {new Date(session.startTime).getTime() -
                             new Date().getTime() <=
                             300000 && (
@@ -273,8 +271,8 @@ export const DeveloperDashboard = () => {
 
           {/* Right Sidebar */}
           {/* <div className="space-y-8"> */}
-            {/* Wallet Card */}
-            {/* <motion.div
+          {/* Wallet Card */}
+          {/* <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="bg-gradient-to-br from-primary-600 to-primary-800 rounded-xl shadow-lg p-6 text-white"

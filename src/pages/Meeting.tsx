@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { MeetingRoom } from '../components/MeetingRoom';
-import { useAuth } from '../contexts/AuthContext';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { MeetingRoom } from "../components/MeetingRoom";
+import { useAuth } from "../contexts/AuthContext";
 
 export const Meeting = () => {
   const { meetingId } = useParams();
@@ -13,21 +13,24 @@ export const Meeting = () => {
   useEffect(() => {
     const fetchMeeting = async () => {
       try {
-        const response = await fetch(`https://synergy-hub.onrender.com/api/meetings/${meetingId}`,{
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        const response = await fetch(
+          `https://dev-junction.onrender.com/api/meetings/${meetingId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
-        });
+        );
         if (!response.ok) {
-          throw new Error('Failed to fetch meeting details');
+          throw new Error("Failed to fetch meeting details");
         }
         const data = await response.json();
         setMeeting(data.data);
       } catch (err) {
-        setError('Failed to load meeting details');
-        console.error('Error:', err);
+        setError("Failed to load meeting details");
+        console.error("Error:", err);
       } finally {
         setIsLoading(false);
       }
@@ -49,7 +52,7 @@ export const Meeting = () => {
   if (error || !meeting) {
     return (
       <div className="min-h-screen pt-16 bg-gray-50 dark:bg-dark-200 flex items-center justify-center">
-        <div className="text-red-500">{error || 'Meeting not found'}</div>
+        <div className="text-red-500">{error || "Meeting not found"}</div>
       </div>
     );
   }
@@ -62,7 +65,9 @@ export const Meeting = () => {
           duration={meeting.duration}
           startTime={meeting.startTime}
           startDate={new Date(meeting.startTime)}
-          developerId={meeting.participants.find((p: any) => p.role === 'developer').userId}
+          developerId={
+            meeting.participants.find((p: any) => p.role === "developer").userId
+          }
         />
       </div>
     </div>

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import {
   Clock,
   Users,
@@ -10,8 +10,8 @@ import {
   PhoneOff,
   Shield,
   AlertCircle,
-} from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+} from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
 
 interface MeetingRoomProps {
   bookingId: string;
@@ -28,22 +28,22 @@ export const MeetingRoom: React.FC<MeetingRoomProps> = ({
   startDate,
   developerId,
 }) => {
-  const [timeLeft, setTimeLeft] = useState<string>('');
+  const [timeLeft, setTimeLeft] = useState<string>("");
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [meeting, setMeeting] = useState<any>(null);
   const { user } = useAuth();
 
   const formatDateTime = (date: Date, time: string) => {
     const timeStr = String(time);
-    const [rawTime, period] = timeStr.split(' ');
-    const [hours, minutes] = rawTime.split(':');
+    const [rawTime, period] = timeStr.split(" ");
+    const [hours, minutes] = rawTime.split(":");
 
     let hour24 = parseInt(hours);
-    if (period === 'PM' && hour24 !== 12) hour24 += 12;
-    if (period === 'AM' && hour24 === 12) hour24 = 0;
+    if (period === "PM" && hour24 !== 12) hour24 += 12;
+    if (period === "AM" && hour24 === 12) hour24 = 0;
 
     const dateObj = new Date(date);
     dateObj.setHours(hour24);
@@ -53,19 +53,19 @@ export const MeetingRoom: React.FC<MeetingRoomProps> = ({
 
     return dateObj.toISOString();
   };
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   useEffect(() => {
     const initializeMeeting = async () => {
       try {
         setIsLoading(true);
         // First check if meeting exists
         const checkResponse = await fetch(
-          `https://synergy-hub.onrender.com/api/meetings/booking/${bookingId}`,
+          `https://dev-junction.onrender.com/api/meetings/booking/${bookingId}`,
           {
-            method: 'GET',
+            method: "GET",
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`, // Add token to headers
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Add token to headers
             },
           }
         );
@@ -78,12 +78,12 @@ export const MeetingRoom: React.FC<MeetingRoomProps> = ({
           const formattedDateTime = formatDateTime(startDate, startTime);
 
           const response = await fetch(
-            'https://synergy-hub.onrender.com/api/meetings',
+            "https://dev-junction.onrender.com/api/meetings",
             {
-              method: 'POST',
+              method: "POST",
               headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
               },
               body: JSON.stringify({
                 bookingId,
@@ -98,7 +98,7 @@ export const MeetingRoom: React.FC<MeetingRoomProps> = ({
                   },
                   {
                     userId: developerId,
-                    role: 'developer',
+                    role: "developer",
                   },
                 ],
               }),
@@ -106,14 +106,14 @@ export const MeetingRoom: React.FC<MeetingRoomProps> = ({
           );
 
           if (!response.ok) {
-            throw new Error('Failed to create meeting');
+            throw new Error("Failed to create meeting");
           }
 
           const data = await response.json();
           setMeeting(data.data);
         }
       } catch (err: any) {
-        setError(err.message || 'Failed to initialize meeting room');
+        setError(err.message || "Failed to initialize meeting room");
       } finally {
         setIsLoading(false);
       }

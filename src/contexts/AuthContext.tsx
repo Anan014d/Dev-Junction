@@ -1,14 +1,14 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ethers } from 'ethers';
-import Cookies from 'js-cookie';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { ethers } from "ethers";
+import Cookies from "js-cookie";
 
 interface UserProfile {
   email?: string;
   phone?: string;
   bio?: string;
   skills?: string[];
-  age:number;
+  age: number;
   hourlyRate?: number;
   githubUrl?: string;
   linkedinUrl?: string;
@@ -26,7 +26,7 @@ interface User {
   _id: string;
   address: string;
   name: string;
-  role: 'developer' | 'customer';
+  role: "developer" | "customer";
   age: number;
   profile?: UserProfile;
 }
@@ -34,7 +34,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  login: (userData?: Omit<User, '_id'>) => Promise<void>;
+  login: (userData?: Omit<User, "_id">) => Promise<void>;
   logout: () => Promise<void>;
   connectWallet: () => Promise<string>;
   checkWalletAuth: (address: string) => Promise<User | null>;
@@ -44,7 +44,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const API_URL = 'https://synergy-hub.onrender.com';
+const API_URL = "https://dev-junction.onrender.com";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -54,19 +54,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Check if user is already authenticated
     const checkAuth = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         const response = await fetch(`${API_URL}/api/auth/me`, {
-          credentials: 'include',
+          credentials: "include",
           headers: {
-            'Authorization': `Bearer ${token}` // Add token to headers
-          }
+            Authorization: `Bearer ${token}`, // Add token to headers
+          },
         });
         if (response.ok) {
           const data = await response.json();
           setUser(data.data);
         }
       } catch (error) {
-        console.error('Auth check failed:', error);
+        console.error("Auth check failed:", error);
       }
     };
 
@@ -75,15 +75,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const connectWallet = async (): Promise<string> => {
     if (!window.ethereum) {
-      throw new Error('Please install MetaMask');
+      throw new Error("Please install MetaMask");
     }
 
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
-      const accounts = await provider.send('eth_requestAccounts', []);
+      const accounts = await provider.send("eth_requestAccounts", []);
       return accounts[0];
     } catch (error) {
-      console.error('Failed to connect wallet:', error);
+      console.error("Failed to connect wallet:", error);
       throw error;
     }
   };
@@ -91,28 +91,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const checkWalletAuth = async (address: string): Promise<User | null> => {
     try {
       const response = await fetch(`${API_URL}/api/auth/wallet/check`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}` // Add token to headers
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Add token to headers
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({ address }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to check wallet');
+        throw new Error("Failed to check wallet");
       }
 
       const data = await response.json();
       return data.exists ? data.data : null;
     } catch (error) {
-      console.error('Failed to check wallet:', error);
+      console.error("Failed to check wallet:", error);
       throw error;
     }
   };
 
-  const login = async (userData?: Omit<User, '_id'>) => {
+  const login = async (userData?: Omit<User, "_id">) => {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
@@ -125,12 +125,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const signature = await signer.signMessage(message);
 
       const response = await fetch(`${API_URL}/api/auth/wallet`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}` 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({
           address,
           signature,
@@ -140,23 +140,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || 'Authentication failed');
+        throw new Error(error.message || "Authentication failed");
       }
 
       const data = await response.json();
       if (data.data.token) {
-        localStorage.setItem('token', data.data.token);
+        localStorage.setItem("token", data.data.token);
       }
       setUser(data.data);
 
       // Redirect based on user role
-      if (data.data.role === 'developer') {
-        navigate('/developer/dashboard');
+      if (data.data.role === "developer") {
+        navigate("/developer/dashboard");
       } else {
-        navigate('/customer/dashboard');
+        navigate("/customer/dashboard");
       }
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
       throw error;
     }
   };
@@ -164,62 +164,64 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     try {
       await fetch(`${API_URL}/api/auth/logout`, {
-        method: 'POST',
-        credentials: 'include',
+        method: "POST",
+        credentials: "include",
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}` // Add token to headers
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Add token to headers
+        },
       });
       setUser(null);
-      navigate('/');
+      navigate("/");
     } catch (error) {
-      console.error('Logout failed:', error);
+      console.error("Logout failed:", error);
     }
   };
 
   const getProfile = async (): Promise<UserProfile> => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const response = await fetch(`${API_URL}/api/users/profile`, {
-        credentials: 'include',
+        credentials: "include",
         headers: {
-          'Authorization': `Bearer ${token}` // Add token to headers
-        }
+          Authorization: `Bearer ${token}`, // Add token to headers
+        },
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch profile');
+        throw new Error("Failed to fetch profile");
       }
 
       const data = await response.json();
       return data.data;
     } catch (error) {
-      console.error('Failed to fetch profile:', error);
+      console.error("Failed to fetch profile:", error);
       throw error;
     }
   };
 
-  const updateProfile = async (profileData: Partial<UserProfile>): Promise<void> => {
+  const updateProfile = async (
+    profileData: Partial<UserProfile>
+  ): Promise<void> => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const response = await fetch(`${API_URL}/api/users/profile`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify(profileData),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update profile');
+        throw new Error("Failed to update profile");
       }
 
       const data = await response.json();
-      setUser(prev => prev ? { ...prev, ...data.data } : null);
+      setUser((prev) => (prev ? { ...prev, ...data.data } : null));
     } catch (error) {
-      console.error('Failed to update profile:', error);
+      console.error("Failed to update profile:", error);
       throw error;
     }
   };
@@ -245,7 +247,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Video,
   Clock,
@@ -17,27 +17,27 @@ import {
   CheckCircle2,
   AlertCircle,
   Wallet,
-} from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import { MeetingModal } from '../components/MeetingModal';
-import { Link } from 'react-router-dom';
-import { ethers } from 'ethers';
-import { useWeb3 } from '../contexts/Web3Context';
+} from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import { MeetingModal } from "../components/MeetingModal";
+import { Link } from "react-router-dom";
+import { ethers } from "ethers";
+import { useWeb3 } from "../contexts/Web3Context";
 
 export const CustomerDashboard = () => {
   const [showNotifications, setShowNotifications] = useState(false);
-  const [selectedTimeframe, setSelectedTimeframe] = useState('week');
+  const [selectedTimeframe, setSelectedTimeframe] = useState("week");
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const [developerProfile, setDeveloperProfile] = useState([]);
   const { getProfile } = useAuth();
   const [selectedMeeting, setSelectedMeeting] = useState<any>(null);
   const [walletBalance, setWalletBalance] = useState({
-    eth: '0',
-    usd: '0',
-    pending: '0',
+    eth: "0",
+    usd: "0",
+    pending: "0",
   });
   const { account } = useWeb3();
-  console.log(account, 'account');
+  console.log(account, "account");
 
   useEffect(() => {
     const fetchWalletBalance = async () => {
@@ -49,21 +49,21 @@ export const CustomerDashboard = () => {
 
           // Fetch ETH price in USD
           const response = await fetch(
-            'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
+            "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
           );
           const data = await response.json();
           const ethPrice = data.ethereum.usd;
-          console.log(balance, 'ugyjffyfyjfyj');
+          console.log(balance, "ugyjffyfyjfyj");
 
           const usdBalance = (parseFloat(ethBalance) * ethPrice).toFixed(2);
 
           setWalletBalance({
             eth: ethBalance,
             usd: usdBalance,
-            pending: '0', // You can implement pending transactions logic if needed
+            pending: "0", // You can implement pending transactions logic if needed
           });
         } catch (error) {
-          console.error('Error fetching wallet balance:', error);
+          console.error("Error fetching wallet balance:", error);
         }
       }
     };
@@ -81,12 +81,13 @@ export const CustomerDashboard = () => {
         const data = await getProfile();
 
         const response = await fetch(
-          `https://synergy-hub.onrender.com/api/meetings/${data._id}/upcoming`,{
-            method: 'GET',
+          `https://dev-junction.onrender.com/api/meetings/${data._id}/upcoming`,
+          {
+            method: "GET",
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            }
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
         );
 
@@ -95,7 +96,7 @@ export const CustomerDashboard = () => {
           setUpcomingSessions(data.data);
         }
       } catch (error) {
-        console.error('Failed to fetch upcoming sessions:', error);
+        console.error("Failed to fetch upcoming sessions:", error);
       }
     };
 
@@ -130,7 +131,7 @@ export const CustomerDashboard = () => {
                 <span>Quick Session</span>
               </button>
               <Link
-                to={'/developers'}
+                to={"/developers"}
                 className="px-4 py-2 bg-white text-primary-600 rounded-xl hover:bg-white/90 transition-colors flex items-center gap-2"
               >
                 <Users className="w-5 h-5" />
@@ -139,8 +140,6 @@ export const CustomerDashboard = () => {
             </div>
           </div>
         </motion.div>
-
-        
 
         <div className="grid lg:grid-cols-1 gap-8">
           {/* Main Content Area */}
@@ -188,7 +187,6 @@ export const CustomerDashboard = () => {
                             </h3>
                           </div>
                         </div>
-                        
                       </div>
 
                       <div className="flex flex-wrap gap-4 mb-4">
@@ -204,8 +202,8 @@ export const CustomerDashboard = () => {
                             {new Date(session.startTime).toLocaleTimeString(
                               [],
                               {
-                                hour: '2-digit',
-                                minute: '2-digit',
+                                hour: "2-digit",
+                                minute: "2-digit",
                               }
                             )}
                           </span>
@@ -213,12 +211,12 @@ export const CustomerDashboard = () => {
                         <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-primary-100">
                           <Timer className="w-4 h-4" />
                           <span>
-                            In{' '}
+                            In{" "}
                             {Math.floor(
                               (new Date(session.startTime).getTime() -
                                 new Date().getTime()) /
                                 (1000 * 60)
-                            )}{' '}
+                            )}{" "}
                             minutes
                           </span>
                         </div>
@@ -242,7 +240,6 @@ export const CustomerDashboard = () => {
                           ${session.bookingId.totalAmount}
                         </span>
                         <div className="flex gap-2">
-                          
                           {new Date(session.startTime).getTime() -
                             new Date().getTime() <=
                             300000 && (
@@ -335,8 +332,6 @@ export const CustomerDashboard = () => {
               </div>
             </motion.div> */}
           </div>
-
-         
         </div>
       </div>
     </div>
