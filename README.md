@@ -27,7 +27,7 @@
 ## Installation & Setup
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/dev-junction.git
+   git clone https://github.com/Anan014d/Dev-Junction.git
    cd dev-junction
    ```
 2. Install dependencies:
