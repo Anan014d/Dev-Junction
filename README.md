@@ -14,7 +14,7 @@
 - **Blockchain-Powered Payments**: Secure and transparent transactions using MetaMask.
 - **Developer Hiring System**: Clients can easily find and hire developers based on their project needs.
 - **Escrow Payment Model**: Funds are held securely until the session is completed.
-- **Integrated Video Call**: Powered by **Vigo Cloud**, enabling seamless communication between clients and developers.
+- **Integrated Video Call**: Powered by **Zigo Cloud**, enabling seamless communication between clients and developers.
 - **Tech Stack**: Built using **MERN (MongoDB, Express.js, React.js, Node.js)** and **Next.js** for a scalable and efficient system.
 
 ## Tech Stack
