@@ -22,7 +22,7 @@
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB
 - **Blockchain Integration**: MetaMask
-- **Video Call Service**: Vigo Cloud
+- **Video Call Service**: Zego Cloud
 
 ## Installation & Setup
 1. Clone the repository:
